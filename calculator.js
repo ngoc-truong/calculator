@@ -1,19 +1,35 @@
 function add(num1, num2){
+    secondNumZero(num2); // If second number is the dividebyzero error message, return it (or else it will be NaN)
     return Number(num1) + Number(num2);
 }
 
 function substract(num1, num2){
+    secondNumZero(num2); 
     return Number(num1) - Number(num2);
 }
 
 function multiply(num1, num2){
+    secondNumZero(num2); 
     return Number(num1) * Number(num2);
 }
 
 function divide(num1, num2){
+    if (num2 === 0 || num2 === "0"){
+        return divideByZero;
+    }
     return Number(num1) / Number(num2);
 }
 
+// Helper function: If num2 = "Sorry...", return num2
+function secondNumZero(secondNum){
+    if (secondNum === divideByZero){
+        return divideByZero;
+    }
+}
+
+
+
+// Operates result
 function operate(operator, num1, num2){
     switch(operator){
         case "plus":
@@ -42,17 +58,12 @@ let equationDisplay = document.querySelector("#equationDisplay");
 let numbersDisplay = document.querySelector("#numbersDisplay");
 let resultDisplay = document.querySelector("#resultDisplay");
 
-/*
-let currentNumber = "";
-let currentOperator = "";
-*/
-
 let numbers = [];
 let operators = [];
+let divideByZero = "Sorry, you cannot divide by 0!";
 
 // Display numbers after click
 numberButtons.forEach((button) => {
-
     button.addEventListener("click", (e) => {
         equationDisplay.textContent += e.target.textContent;
         numbersDisplay.textContent += e.target.textContent;
@@ -62,80 +73,97 @@ numberButtons.forEach((button) => {
 // Display operators after click
 operatorButtons.forEach((button) => {
     button.addEventListener("click", (e) => {
-        operators.push(e.target.id);
         // If operator is directly clicked after another operator
-
         if ( /\+|\-|\*|\//.test(equationDisplay.textContent[equationDisplay.textContent.length - 2]) ){
             equationDisplay.textContent = equationDisplay.textContent.substring(0, equationDisplay.textContent.length - 2) + " " + e.target.textContent + " ";
+            operators[operators.length - 1] = e.target.id;
         } else {
             // Display the number
             equationDisplay.textContent += " " + e.target.textContent + " ";
 
-            // Save the number
+            // Save number and operator in array
             numbers.push(numbersDisplay.textContent);
+            operators.push(e.target.id);
             numbersDisplay.textContent = "";
         }        
     })
 })
 
-// Operates result
+// Do calculations
 equalsToButton.addEventListener("click", (e) => {
+    // If nothing has been entered yet, return
+    if (numbersDisplay.textContent === ""){
+        return;
+    }
+
     // Add the last typed number to the equation
     numbers.push(numbersDisplay.textContent);
-
-    // Do multiplication and division first (for complex equations)
+    
+    // Precedence: multipl > division > addition/substraction
     for (let i = 0; i < operators.length; i++){
         if (operators[i] === "multiply"){
-            numbers[i] = multiply(numbers[i], numbers[i+1]);
-            numbers.splice(i + 1, 1);
-            operators.splice(i, 1);
-        } else if (operators[i] === "divide"){
-            numbers[i] = divide(numbers[i], numbers[i+1]);
-            numbers.splice(i + 1, 1);
-            operators.splice(i, 1);
-        } 
-    }
-
-    // Now do addition and substraction step by step
-    // ToDo: Looks very copy-pasty!
-    for (let i = 0; i <= operators.length; i++){
-        if (operators[i] === "plus"){
-            numbers[i] = add(numbers[i], numbers[i + 1]);
-            numbers.splice(i + 1, 1);
-            operators.splice(i, 1);
-        } else if (operators[i] === "minus"){
-            console.log("Komm ich hier rein?");
-            numbers[i] = substract(numbers[i], numbers[i+1]);
-            numbers.splice(i + 1, 1);
-            operators.splice(i, 1);
+            replaceResult(i, "multiply", numbers, operators);
         }
     }
+    numbers = clearX(numbers);
+    operators = clearX(operators);
 
-    
-    // Seltsam: Warum muss ich das nochmal hard coden?
-    if (operators[0] === "plus"){
-        numbers[0] = add(numbers[0], numbers[1]);
-        numbers.splice(1, 1);
-        operators.splice(1, 1);
-    } else if (operators[0] === "minus"){
-        numbers[0] = substract(numbers[0], numbers[1]);
-        numbers.splice(0 + 1, 1);
-        operators.splice(0, 1);
+    for (let i = 0; i < operators.length; i++){
+        if (operators[i] === "divide"){
+            replaceResult(i, "divide", numbers, operators);
+        } 
     }
-    
+    numbers = clearX(numbers);
+    operators = clearX(operators);
 
-    console.log("In the end the numbers are: " + numbers);
-    console.log("In the end the operators are: " + operators);
+    // Addition and substraction
+    for (let i = 0; i <= operators.length; i++){
+        if (operators[i] === "plus"){
+            replaceResult(i, "plus", numbers, operators);
+        } else if (operators[i] === "minus"){
+            replaceResult(i, "minus", numbers, operators);
+        }
+    }
+    numbers = clearX(numbers);
+    operators = clearX(operators);
 
+    // Print rounded result or error message on display
+    if (isNaN(numbers[0])){
+        resultDisplay.textContent = numbers[0];
+    } else {
+        resultDisplay.textContent = Number.isInteger(numbers[0]) ? numbers[0] : numbers[0].toFixed(4);
+    }
+    clearAll();
 })
+
+// Helper functions
+// Because I replace every finished calculated with an x, the x has to be cleared in new loops
+function clearX(array){
+    return array.filter(item => item !== "x");
+}
+
+// Replaces the result of an intermediate step in the arrays
+function replaceResult(index, operator, nums, ops){
+    if (nums[index] === divideByZero){
+        nums[index + 1] = divideByZero;
+        nums[index] = divideByZero;
+    } else {
+        nums[index + 1] = operate(operator, nums[index], nums[index + 1]);
+        nums[index] = "x";
+    }
+    ops[index] = "x";
+}
 
 // Clear display
 clearButton.addEventListener("click", (e) => {
+    clearAll();
+    resultDisplay.textContent = "";
+})
+
+function clearAll(){
     equationDisplay.textContent = "";
     numbersDisplay.textContent = "";
-    resultDisplay.textContent = "";
-
     numbers = [];
     operators = [];
-})
+}
 
