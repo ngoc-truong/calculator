@@ -54,6 +54,9 @@ const numberButtons = document.querySelectorAll(".number");
 const operatorButtons = document.querySelectorAll(".operator");
 const clearButton = document.querySelector("#clear");
 const equalsToButton = document.querySelector("#equalsTo");
+const decimalButton = document.querySelector("#decimal");
+const undoButton = document.querySelector("#undo");
+
 let equationDisplay = document.querySelector("#equationDisplay");
 let numbersDisplay = document.querySelector("#numbersDisplay");
 let resultDisplay = document.querySelector("#resultDisplay");
@@ -70,9 +73,25 @@ numberButtons.forEach((button) => {
     })
 })
 
+// Display decimal number after click
+decimalButton.addEventListener("click", (e) => {
+    equationDisplay.textContent += e.target.textContent;
+    numbersDisplay.textContent += e.target.textContent;
+    decimalButton.disabled = true;
+})
+
+// Undo last character
+undoButton.addEventListener("click", (e) => {
+    // delete the last character
+    equationDisplay.textContent = equationDisplay.textContent.substring(0, equationDisplay.textContent.length - 1);
+    numbersDisplay.textContent = numbersDisplay.textContent.substring(0, numbersDisplay.textContent.length - 1);
+})
+
 // Display operators after click
 operatorButtons.forEach((button) => {
     button.addEventListener("click", (e) => {
+        decimalButton.disabled = false;
+
         // If operator is directly clicked after another operator
         if ( /\+|\-|\*|\//.test(equationDisplay.textContent[equationDisplay.textContent.length - 2]) ){
             equationDisplay.textContent = equationDisplay.textContent.substring(0, equationDisplay.textContent.length - 2) + " " + e.target.textContent + " ";
@@ -95,6 +114,8 @@ equalsToButton.addEventListener("click", (e) => {
     if (numbersDisplay.textContent === ""){
         return;
     }
+
+    decimalButton.disabled = false;
 
     // Add the last typed number to the equation
     numbers.push(numbersDisplay.textContent);
@@ -158,6 +179,7 @@ function replaceResult(index, operator, nums, ops){
 clearButton.addEventListener("click", (e) => {
     clearAll();
     resultDisplay.textContent = "";
+    decimalButton.disabled = false;
 })
 
 function clearAll(){
@@ -167,3 +189,4 @@ function clearAll(){
     operators = [];
 }
 
+// Bonus 1: Let the user type decimal numbers
