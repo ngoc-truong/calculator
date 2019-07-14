@@ -97,7 +97,7 @@ operatorButtons.forEach((button) => {
             equationDisplay.textContent = equationDisplay.textContent.substring(0, equationDisplay.textContent.length - 2) + " " + e.target.textContent + " ";
             operators[operators.length - 1] = e.target.id;
         } else {
-            // Display the number
+            // Display the operator
             equationDisplay.textContent += " " + e.target.textContent + " ";
 
             // Save number and operator in array
@@ -148,12 +148,14 @@ equalsToButton.addEventListener("click", (e) => {
     numbers = clearX(numbers);
     operators = clearX(operators);
 
+
     // Print rounded result or error message on display
     if (isNaN(numbers[0])){
-        resultDisplay.textContent = numbers[0];
+        resultDisplay.textContent = numbers[0]; // error message
     } else {
         resultDisplay.textContent = Number.isInteger(numbers[0]) ? numbers[0] : numbers[0].toFixed(4);
     }
+    
     clearAll();
 })
 

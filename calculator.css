@@ -1,0 +1,117 @@
+:root{
+    --green: rgb(140, 194, 174);
+    --light-green: #DCEDC1;
+    --orange: #FFD3B6;
+    --pink: #FFAAA7;
+    --red: rgb(221, 105, 114);
+    --grey: rgb(119, 111, 110);
+    --light-grey: rgb(224, 224, 224);
+    --blue: #185a9d;
+}
+
+
+h1 {
+    font-family: 'Quicksand', sans-serif;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    font-size: 1.9em;
+    color: var(--blue);
+    margin-top: 2em;
+}
+
+.number, .operator, .edit, #displayWrapper, #decimal {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 2.5em;
+    font-weight: bolder;
+    color: white;
+}
+
+
+#decimal {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+button {
+    background-color: transparent;
+    border-radius: 30px 5px 30px 5px;
+    transition: all .2s ease-in-out;
+    border:none;
+}
+
+button:hover{
+    background-color: var(--green);
+    opacity: 50%;
+    border-radius: 30px 5px 30px 5px;
+    transform: scale(1.1);
+}
+
+#wrapper {
+    background-color: var(--green);
+    background: -webkit-linear-gradient(to bottom, var(--green), #185a9d); 
+    background: linear-gradient(to bottom, var(--green), #185a9d);
+    width: 530px;
+    height: 650px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr;
+    column-gap: 15px;
+    border-radius: 20px;
+    margin-top: 3em;
+    padding: 1.5em;
+    border: solid 3.5px var(--grey);
+    box-shadow: 0px 30px 25px -10px rgba(0, 0, 0, 0.3);
+}
+
+#displayWrapper {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    height: 50px;
+    padding: 0.5em;
+    font-size: 3em;
+    text-align: right;
+    background-color: var(--grey);
+    border-radius: 10px;
+    opacity: 50%;
+}
+
+#numbersDisplay {
+    display: none;
+}
+
+#numsWrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+#num0{
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
+
+#operatorWrapper{
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+#resultButtons {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-column-start: 3;
+    grid-row-start: 2;
+    grid-row-end: 3;
+}
+
+#equalsTo {
+    background-color: var(--red);
+    border-radius: 30px 5px 30px 5px;
+}
+
+#equalsTo:hover{
+    background-color: var(--pink);
+}
+
+#hide {
+    visibility: hidden;
+}
+

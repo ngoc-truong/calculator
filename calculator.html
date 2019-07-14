@@ -2,31 +2,52 @@
 <html>
     <head>
         <meta charset="utf-8"/>
+        <link rel="stylesheet" href="calculator.css">
+        <link href="https://fonts.googleapis.com/css?family=Berkshire+Swash|Quicksand:300&display=swap" rel="stylesheet"> 
     </head>
     <body>
-        <div id="resultDisplay"></div>
-        <div id="equationDisplay"></div>
-        <div id="numbersDisplay"></div>
 
-        <button class="number" id="num0">0</button>
-        <button class="number" id="num1">1</button>
-        <button class="number" id="num2">2</button>
-        <button class="number" id="num3">3</button>
-        <button class="number" id="num4">4</button>
-        <button class="number" id="num5">5</button>
-        <button class="number" id="num6">6</button>
-        <button class="number" id="num7">7</button>
-        <button class="number" id="num8">8</button>
-        <button class="number" id="num9">9</button>
+        <h1>Calculater, Alligator!</h1>
+        <div id="wrapper">
+            <div id="displayWrapper">
+                <div id="resultDisplay"></div>
+                <div id="equationDisplay"></div>
+                <div id="numbersDisplay"></div>
+            </div>
 
-        <button class="operator" id="plus">+</button>
-        <button class="operator" id="minus">-</button>
-        <button class="operator" id="multiply">*</button>
-        <button class="operator" id="divide">÷</button>
-        <button id="decimal">.</button>
-        <button id="undo">Undo</button>
-        <button id="equalsTo">=</button>
-        <button id="clear">clear</button>
+            <div id="numsWrapper">
+                <button class="number" id="num7">7</button>
+                <button class="number" id="num8">8</button>
+                <button class="number" id="num9">9</button>
+
+                <button class="number" id="num4">4</button>
+                <button class="number" id="num5">5</button>
+                <button class="number" id="num6">6</button>
+
+                <button class="number" id="num1">1</button>
+                <button class="number" id="num2">2</button>
+                <button class="number" id="num3">3</button>
+
+                <button class="number" id="num0">0</button>
+                <button id="decimal">.</button>
+
+            </div>
+
+            <div id="operatorWrapper">
+                <button class="operator" id="plus">+</button>
+                <button class="operator" id="minus">-</button>
+                <button class="operator" id="multiply">*</button>
+                <button class="operator" id="divide">÷</button>
+            </div>
+
+            <div id="resultButtons">
+                <button class="edit" id="undo">↶</button>
+                <button class="edit" id="clear">c</button>
+                <button class="edit" id="hide">,</button>
+                <button class="edit" id="equalsTo">=</button>
+            </div>
+
+        </div>
 
     </body>
 
