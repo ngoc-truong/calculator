@@ -1,17 +1,17 @@
 function add(num1, num2){
-    return num1 + num2;
+    return Number(num1) + Number(num2);
 }
 
 function substract(num1, num2){
-    return num1 - num2;
+    return Number(num1) - Number(num2);
 }
 
 function multiply(num1, num2){
-    return num1 * num2;
+    return Number(num1) * Number(num2);
 }
 
 function divide(num1, num2){
-    return num1 / num2;
+    return Number(num1) / Number(num2);
 }
 
 function operate(operator, num1, num2){
@@ -34,22 +34,24 @@ function operate(operator, num1, num2){
 }
 
 // DOM-Selectors
-const numbers = document.querySelectorAll(".number");
-const operators = document.querySelectorAll(".operator");
+const numberButtons = document.querySelectorAll(".number");
+const operatorButtons = document.querySelectorAll(".operator");
 const clearButton = document.querySelector("#clear");
-const equalsTo = document.querySelector("#equalsTo");
+const equalsToButton = document.querySelector("#equalsTo");
 let equationDisplay = document.querySelector("#equationDisplay");
 let numbersDisplay = document.querySelector("#numbersDisplay");
 let resultDisplay = document.querySelector("#resultDisplay");
 
+/*
 let currentNumber = "";
 let currentOperator = "";
+*/
 
 let numbers = [];
 let operators = [];
 
 // Display numbers after click
-numbers.forEach((button) => {
+numberButtons.forEach((button) => {
 
     button.addEventListener("click", (e) => {
         equationDisplay.textContent += e.target.textContent;
@@ -58,9 +60,9 @@ numbers.forEach((button) => {
 })
 
 // Display operators after click
-operators.forEach((button) => {
+operatorButtons.forEach((button) => {
     button.addEventListener("click", (e) => {
-        currentOperator = e.target.id;
+        operators.push(e.target.id);
         // If operator is directly clicked after another operator
 
         if ( /\+|\-|\*|\//.test(equationDisplay.textContent[equationDisplay.textContent.length - 2]) ){
@@ -70,17 +72,61 @@ operators.forEach((button) => {
             equationDisplay.textContent += " " + e.target.textContent + " ";
 
             // Save the number
-            currentNumber = numbersDisplay.textContent;
+            numbers.push(numbersDisplay.textContent);
             numbersDisplay.textContent = "";
         }        
     })
 })
 
 // Operates result
-equalsTo.addEventListener("click", (e) => {
-    let lastNumber = numbersDisplay.textContent;
-    resultDisplay.textContent = operate(currentOperator, Number(currentNumber), Number(lastNumber));
-    numbersDisplay.textContent = "";
+equalsToButton.addEventListener("click", (e) => {
+    // Add the last typed number to the equation
+    numbers.push(numbersDisplay.textContent);
+
+    // Do multiplication and division first (for complex equations)
+    for (let i = 0; i < operators.length; i++){
+        if (operators[i] === "multiply"){
+            numbers[i] = multiply(numbers[i], numbers[i+1]);
+            numbers.splice(i + 1, 1);
+            operators.splice(i, 1);
+        } else if (operators[i] === "divide"){
+            numbers[i] = divide(numbers[i], numbers[i+1]);
+            numbers.splice(i + 1, 1);
+            operators.splice(i, 1);
+        } 
+    }
+
+    // Now do addition and substraction step by step
+    // ToDo: Looks very copy-pasty!
+    for (let i = 0; i <= operators.length; i++){
+        if (operators[i] === "plus"){
+            numbers[i] = add(numbers[i], numbers[i + 1]);
+            numbers.splice(i + 1, 1);
+            operators.splice(i, 1);
+        } else if (operators[i] === "minus"){
+            console.log("Komm ich hier rein?");
+            numbers[i] = substract(numbers[i], numbers[i+1]);
+            numbers.splice(i + 1, 1);
+            operators.splice(i, 1);
+        }
+    }
+
+    
+    // Seltsam: Warum muss ich das nochmal hard coden?
+    if (operators[0] === "plus"){
+        numbers[0] = add(numbers[0], numbers[1]);
+        numbers.splice(1, 1);
+        operators.splice(1, 1);
+    } else if (operators[0] === "minus"){
+        numbers[0] = substract(numbers[0], numbers[1]);
+        numbers.splice(0 + 1, 1);
+        operators.splice(0, 1);
+    }
+    
+
+    console.log("In the end the numbers are: " + numbers);
+    console.log("In the end the operators are: " + operators);
+
 })
 
 // Clear display
@@ -89,30 +135,7 @@ clearButton.addEventListener("click", (e) => {
     numbersDisplay.textContent = "";
     resultDisplay.textContent = "";
 
-    currentNumber = "";
-    currentOperator = "";
+    numbers = [];
+    operators = [];
 })
 
-/*
-// Helper method: Give me the number after the second to last operator
-function indexOfLastNumber(str){
-    let lastIndex = 0;
-    let regex = /\+|\-|\*|\//;
-
-    if(str.search(regex) === str.length - 2){
-        alert("klappt das?");
-        return lastIndex;
-    }
-
-    for (let i = 0; i < str.length; i++){
-        if (regex.test(str[i])){    // We want to get the last operator
-            lastIndex = i + 2;      // + 2 because you want the number, not the operator + space
-        }
-    }
-    return lastIndex;
-}
-*/
-
-// ToDo/Improvement: 
-// Save all typed numbers and operators into arrays (?)
-// Write a function to solve complex equations (e.g. multiply > division > plus minus)
